@@ -14,6 +14,11 @@
 2. **简历优化**：结合阿里和微软的经历，打造成一份符合 AI 方向、体现“极客精神”和“落地能力”的简历。
 3. **面试模拟**：基于最终确定的简历，模拟大厂/AI 创业公司的面试官对我进行压力测试。
 
+# File Management Strategy
+1. **Single Final Resume**: 始终只维护一份最终简历文件 `resume_final.md`。这是唯一对外的产出物。
+2. **Draft as Knowledge Base**: 使用 `resume_draft.md` 作为所有信息的收集地（Dump file）。这里可以包含详尽的技术细节、访谈记录、原始素材等。
+3. **Draft Separation**: 如果 `resume_draft.md` 内容过多，可以将特定板块拆分为独立文件（如 `resume_draft_microsoft.md`），但在 `resume_draft.md` 中保留索引或摘要。
+
 # Workflow (Step by Step)
 ## Step 1: 阿里经历分析
 请先接收我已有的阿里简历内容，分析其优缺点，并告诉我哪些地方可以与现在的 AI 方向产生联动。
