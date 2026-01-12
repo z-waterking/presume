@@ -13,16 +13,16 @@
 分别负责 BingViz Agents (Agent 平台)、SkillLoop (Hackathon 项目) 及 Meta Smart Match (搜索广告匹配) 的核心研发，在 AI Agent 与搜推算法领域取得显著业务落地成果。
 
 *   **Agent 平台：针对复杂业务归因难题，构建深度业务分析框架 (Deep Analytic Framework)**
-    **Deep Analytic Engine** 主导开发基于 LLM + MCP (Model Context Protocol) 的 Agent 框架。设计了 Workflow-based 范式，支持基于 Scenario (场景剧本) 的 Step-by-Step 执行模式，取代不稳定的 ReAct 循环，实现“大盘扫描 -> 维度拆解 -> 竞品对比”的长链路思维链执行。
+    **Deep Analytic Engine** 主导开发基于 **LLM + MCP (Model Context Protocol)** 的 Agent 框架。融合 **ClickHouse** (实时) 与 **Databricks** (离线) 数据源，构建基于 **LangGraph** 的图导向执行引擎。设计 **Automatic Context Propagation** (自动上下文传播) 机制，支持基于 Scenario 的 Step-by-Step 执行模式，取代不稳定的 ReAct 循环，实现“大盘扫描 -> 维度拆解 -> 竞品对比”的长链路思维链执行。
     **业务落地** 无需人工干预，Agent 自动产出关于欧洲市场 RPM 低下的关键结论（用户搜索 Query 结构偏向无广告意图，而非广告匹配能力不足），并通过数据验证了竞品差异，直接支持了业务战略决策。
 
 *   **Vibe Coding：探索 LLM Native 开发新范式，解决企业内部隐性知识流动难题**
-    **Doc-First Engineering** 在 Microsoft Global Hackathon 中发起 SkillLoop 项目。提出 "Doc-First" 开发范式，通过 System Prompt 强制要求 AI 在编码前先分析文档并生成 Task Log，有效解决了复杂 Agent 开发中的上下文丢失与逻辑幻觉问题。
-    **项目影响力** 荣获 Microsoft Global Hackathon 2025 全球三等奖 (Global 3rd Place)。入选 OPE 标杆项目，代表中国区向 Microsoft AI CEO (Mustafa Suleyman) 进行汇报与演示。
+    **Doc-First Engineering** 在 Microsoft Global Hackathon 中发起 SkillLoop 项目。首创 "Document-Driven Development" 范式，设计基于 **Structured Task Log** (结构化任务日志) 的系统提示词协议，强制 Agent 维护一份“自包含”的工程状态日志，有效解决了复杂 Agent 开发中的上下文丢失与逻辑幻觉问题，实现 AI 编码任务的可中断与可恢复执行。
+    **项目影响力** 荣获 Microsoft Global Hackathon 2025 **全球三等奖 (Global 3rd Place)**。入选 OPE 标杆项目，代表中国区向 Microsoft AI CEO (Mustafa Suleyman) 进行汇报与演示。
 
 *   **搜索广告：针对长尾流量变现效率低痛点，主导智能语义匹配系统 (MSM) 的召回与排序升级**
-    **语义召回体系** 构建 Query-Ad 点击二部图，利用 Transitive Join 挖掘非直观共现关系，并结合离线生成式语义扩展，实现对长尾 Query 意图的精准捕获。
-    **分层排序架构** 设计 L1 粗排 + L2 精排的漏斗架构。在 L1 阶段引入 Pareto Optimization 思想，通过多目标公式融合 Rank Score（语义相关性）、CTR 预估与 Bid，在保证用户体验的前提下最大化商业变现效率。北美市场 RPM +10%，CN 市场 Revenue +2%。获 Greatness Award。
+    **语义召回体系** 构建 Query-Ad 点击二部图，利用 **Transitive Join** (传递连接) 挖掘非直观共现关系，并结合 **NLP Rewriting** (Porter Stemmer/离线语义扩展) 技术，突破仅靠 Query-Keyword 表面匹配的限制，实现对长尾 Query 意图的精准捕获。
+    **分层排序架构** 设计 L1 粗排 + L2 精排的漏斗架构。在 L1 阶段引入 **Pareto Optimization** 思想，通过多目标公式融合 Rank Score（语义相关性）、CTR 预估与 Bid，在保证用户体验的前提下最大化商业变现效率。北美市场 **RPM +10%**，CN 市场 Revenue +2%。获 **Greatness Award**。
 
 ---
 

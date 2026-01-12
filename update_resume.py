@@ -1,0 +1,151 @@
+
+content = r'''\documentclass[UTF8, 11pt, fontset=none]{ctexart}
+
+% Standard margins for better readability and filling more pages
+\usepackage[a4paper, margin=0.7in]{geometry}
+\usepackage{titlesec}
+\usepackage{array}
+\usepackage{fontspec}
+
+% --- Font Configuration ---
+% 1. Set English/Number font to Arial
+\setmainfont[
+    Path = fonts/,
+    BoldFont = arialbd.ttf,
+    ItalicFont = ariali.ttf,
+    BoldItalicFont = arialbi.ttf
+]{arial.ttf}
+
+\setsansfont[
+    Path = fonts/,
+    BoldFont = arialbd.ttf,
+    ItalicFont = ariali.ttf,
+    BoldItalicFont = arialbi.ttf
+]{arial.ttf}
+
+% 2. Set Chinese font
+% Main: Songti (SimSun) - Regular text starts here
+% Bold: Heiti (SimHei) - ensures \textbf{} becomes Heiti (for Summary etc.)
+\setCJKmainfont[
+    Path = fonts/,
+    BoldFont = simhei.ttf,
+    ItalicFont = simsun.ttc
+]{simsun.ttc}
+
+\setCJKsansfont[Path=fonts/]{simhei.ttf}
+
+% Define font families
+\setCJKfamilyfont{zhsong}[Path=fonts/]{simsun.ttc}
+\setCJKfamilyfont{zhhei}[Path=fonts/]{simhei.ttf}
+\setCJKfamilyfont{zhyahei}[Path=fonts/, BoldFont=msyhbd.ttc]{msyh.ttc}
+
+% Redefine font commands to use our local files
+\renewcommand*{\songti}{\CJKfamily{zhsong}}
+\renewcommand*{\heiti}{\CJKfamily{zhhei}}
+\newcommand*{\yahei}{\CJKfamily{zhyahei}}
+
+% Increase line spacing
+\linespread{1.15}
+% Add paragraph spacing
+\setlength{\parskip}{0.3em}
+
+% Disable page numbers
+\pagestyle{empty}
+
+% --- Section Title Styling ---
+% Use YaHei for section titles
+\titleformat{\section}{\Large\yahei\bfseries}{}{0em}{}[\titlerule]
+% Increased section spacing: {left}{before}{after}
+\titlespacing{\section}{0pt}{12pt}{2pt}
+
+\begin{document}
+% Removed negative vspace
+
+
+% --- 个人信息 ---
+\begin{center}
+    {\huge \heiti \textbf{张思凡}} \\
+    \vspace{8pt}
+    \small 13260151230 \textbar \ zhangsifanbj@163.com \textbar \ 北京市海淀区
+\end{center}
+
+% --- 工作经历 ---
+\section*{工作经历}
+\noindent
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} l l r}
+    \textbf{微软中国} & SDE 2 & 2022.11-至今 \\
+    \textbf{阿里巴巴 海外电商} & 推荐算法工程师 & 2020.07-2022.10 \\
+    \textbf{阿里巴巴 \& 亚马逊AWS} & 算法工程师(实习) & 2019.05-2019.09 \\
+\end{tabular*}
+
+% --- 项目经历 ---
+\section*{项目经历}
+
+% --- 微软项目 ---
+\noindent \textbf{微软中国} \hfill \textbf{2022.11-至今} \\
+\noindent \textbf{分别负责 Meta Smart Match (搜索广告匹配) 及 BingViz Agents (Agent 平台) 的核心研发,在搜推算法与 AI Agent 领域取得显著业务落地成果。}
+
+\vspace{3pt}
+
+% MSM
+\noindent $\bullet$ \textbf{搜索广告: 针对长尾流量变现效率低痛点, 主导智能语义匹配系统 (MSM) 的召回与排序升级} \\
+\noindent \textbf{语义召回体系} \hspace{0.3em} 构建 Query-Ad 点击二部图, 利用 \textbf{Transitive Join} (传递连接) 挖掘非直观共现关系, 并结合 \textbf{NLP Rewriting} (Porter Stemmer/语义扩展) 技术, 突破仅靠 Query-Keyword 表面匹配的限制, 实现对长尾 Query 意图的精准捕获。 \\
+\noindent \textbf{分层排序架构} \hspace{0.3em} 设计 L1 粗排 + L2 精排的漏斗架构。在 L1 阶段引入 \textbf{Pareto Optimization} 思想, 构建由 Revenue、CTR 和 Relevance 构成的 \textbf{Multi-Objective} (多目标) 优化空间, 动态平衡商业变现与用户体验。北美市场 RPM +1.8\%, CN 市场 Revenue +2\%。\textbf{获 Greatness Award}。
+
+\vspace{3pt}
+
+% Agent & SkillLoop
+\noindent $\bullet$ \textbf{AI Agent 平台与开发范式: BingViz Agents (业务分析) \& SkillLoop (Vibe Coding)} \\
+\noindent \textbf{深度分析引擎} \hspace{0.3em} 基于 \textbf{LLM + MCP} 架构，构建专注于复杂归因的深度业务分析引擎。融合 \textbf{ClickHouse}(实时) 与 \textbf{Databricks}(离线) 数仓, 利用 \textbf{LangGraph} 实现图导向的推理执行。设计 \textbf{Automatic Context Propagation} 机制, 替代不稳定的 ReAct 循环, 实现“大盘扫描 $\rightarrow$ 下钻归因”的稳健思维链, 成功自动归因欧洲市场 RPM 波动根因, 直接支持业务战略决策。 \\
+\noindent \textbf{开发范式探索} \hspace{0.3em} 在 Global Hackathon 中发起 SkillLoop 项目, 首创 \textbf{"Document-Driven Development"} 范式。设计基于 \textbf{Structured Task Log} 的系统协议, 强制 Agent 维护“自包含”的工程状态, 解决长周期开发中的上下文丢失难题, \textbf{显著缩短开发周期}。项目\textbf{荣获 Global 3rd Place (全球季军)}, 并作为 OPE 标杆向 Microsoft AI CEO (Mustafa Suleyman) 汇报。
+
+\vspace{-6pt}
+\noindent \rule{\textwidth}{0.5pt} % 分隔符
+\noindent \textbf{阿里巴巴 海外电商} \hfill \textbf{2020.07-2022.10} \\
+\noindent \textbf{分别负责 AE 推荐业务中排序及召回模块,从全链路视角进行迭代升级,不断提升整个推荐链路的业务效率,助力系统精准匹配用户兴趣,取得了加收转化率+7\%,UV价值+12\%的效果。}
+
+\vspace{3pt}
+
+% 排序模块
+\noindent $\bullet$ \textbf{排序: 针对推荐策略实时调控的需要,提出实时深度控制模块,并横向拓展助力全场域提升} \\
+\noindent \textbf{深度控制 LTR} \hspace{0.3em} 作为大模型的后链路,摒弃传统的手工调权,直接设定线上期望业务目标,通过深度控制网络(PID),动态调整各 label 所对应的loss融合权重,以寻找当前限制下的最优参数。通过控制离线 auc及模型参数变化的阈值,来保证在线效果的稳定性。取得UV价值+12\%的效果。 \\
+\noindent \textbf{全场域优化} \hspace{0.3em} 对实时流程的上下游进行了抽象。样本侧,设置缓存区以归因延迟label,设置缓冲队列以保持正负样本比例稳定。利用drop rank 选取大模型 top10\%的特征用于LTR训练。构建了从数据源、样本构造、到模型训练、线上生效等一整套配置化流程。于各个场域均取得了IPV+2\%,UV价值+2\%以上的收益。
+
+\vspace{3pt}
+
+% 召回模块
+\noindent $\bullet$ \textbf{召回: 针对多路召回合并时带来的马太效应,提出个性化多路召回融合模块} \\
+\noindent \textbf{个性化召回融合} \hspace{0.3em} 针对线上多路召回(>=10)合并时,截断数量由人工拍定造成的马太效应与效率损失问题,提出了个性化召回融合方法。利用黑盒优化的思想,引入投票理论和borda 计数法,根据item的相对顺序及召回对应的权重,确定item 最终顺序。离线侧,采用生成器动态生成各路召回融合权重;在线侧,利用评估器对不同权重的线上效果进行评估,同时指导生成器的训练。取得了GMV+2.4\%的效果。
+
+\vspace{3pt}
+
+% 全链路模块
+\noindent $\bullet$ \textbf{全链路: 离线评估召回有效性,研究召回与排序的漏斗模式带来的耦合问题} \\
+\noindent \textbf{离线评估} \hspace{0.3em} 搭建hitrate 评估流程,通过对超过20种召回源进行统一尺度下的评估,以离线验证召回数据源的有效性;通过各路召回组合评估,以发现可互补的召回源;通过粗排打分结果评估,以评定粗排的有效性。 \\
+\noindent \textbf{解除耦合} \hspace{0.3em} 针对推荐系统漏斗模式所带来的上下游链路耦合问题,评估各路召回曝光占比及转化效率,以验证耦合现象的存在。与精排联动,对召回来源进行泛化,削减耦合程度,助力更多召回源上线。
+
+% --- 发表论文 ---
+\section*{发表论文}
+\noindent 1. Yifan Zhu, Sifan Zhang, etc. Social weather: A review of crowdsourcing-assisted meteorological knowledge services through social cyberspace[J]. Geoscience Data Journal, 2020 (SCI-2区) \\
+\noindent 2. Yubing Nie, Yifan Zhu, Sifan Zhang, etc. Academic rising star prediction via scholar's evaluation model and machine learning techniques[J]. Scientometrics, 2019. (SCI-2区)
+
+% --- 教育背景 ---
+\section*{教育背景}
+\noindent
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} l l l r}
+    \textbf{北京理工大学(985)} & 硕士 & 计算机学院 计算机科学与技术 & 2017.09-2020.07 \\
+    \textbf{暨南大学(211)} & 本科 & 电气信息学院 包装工程 & 2012.09-2016.07 \\
+\end{tabular*}
+
+% --- 获奖情况 ---
+\section*{获奖情况}
+\noindent Microsoft Global Hackathon 2025 \textbf{Global 3rd Place (全球季军)} \hfill 2025.09 \\
+\noindent Microsoft Greatness Award \hfill 2024.12 \\
+\noindent 北京市2020年优秀毕业生 \hfill 2020.07 \\
+\noindent 北京大学生优秀创业团队二等奖,创立了智法互动创业团队,已投入运营 \hfill 2019.09 \\
+\noindent 工信创新奖学金 \hfill 2019.04
+
+\end{document}
+'''
+with open(r'd:\presume\resume_sifan_zhang_awesome.tex', 'w', encoding='utf-8') as f:
+    f.write(content)
