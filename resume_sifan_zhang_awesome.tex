@@ -1,24 +1,31 @@
 \documentclass[UTF8, 11pt, fontset=overleaf]{ctexart}
 
-% 页面布局：紧凑边距，确保一页纸
-\usepackage[a4paper, top=0.4in, bottom=0.4in, left=0.5in, right=0.5in]{geometry}
+% Standard margins for better readability and filling more pages
+\usepackage[a4paper, margin=0.7in]{geometry}
 \usepackage{titlesec}
 \usepackage{array}
 
-% 禁用页码
+% Increase line spacing
+\linespread{1.15}
+% Add paragraph spacing
+\setlength{\parskip}{0.3em}
+
+% Disable page numbers
 \pagestyle{empty}
 
-% --- 标题样式设置 ---
+% --- Section Title Styling ---
 \titleformat{\section}{\large\heiti\bfseries}{}{0em}{}[\titlerule]
-\titlespacing{\section}{0pt}{8pt}{4pt}
+% Increased section spacing: {left}{before}{after}
+\titlespacing{\section}{0pt}{12pt}{6pt}
 
 \begin{document}
-\vspace*{-2.0em} % 整体内容上移
+% Removed negative vspace
+
 
 % --- 个人信息 ---
 \begin{center}
     {\huge \heiti \textbf{张思凡}} \\
-    \vspace{3pt}
+    \vspace{8pt}
     \small 13260151230 \textbar \ zhangsifanbj@163.com \textbar \ 北京市海淀区
 \end{center}
 
@@ -52,9 +59,9 @@
 \noindent \textbf{深度思考引擎} \hspace{0.3em} 主导开发基于 LLM + MCP (Model Context Protocol) 的 Agent 框架。设计 Workflow-based 范式,取代不稳定的 ReAct 循环, 实现“大盘扫描 $\rightarrow$ 维度拆解 $\rightarrow$ 竞品对比”的长链路思维链执行。 \\
 \noindent \textbf{范式验证与落地} \hspace{0.3em} 提出“数据完备+专家经验”的开放式分析范式: 为 Agent 提供充足业务数据与专家先验上下文, 允许其自主探索分析路径与归因逻辑。基于此能力, 1) 自动归因欧洲市场 RPM 波动, 直接支持业务决策; 2) 独立构建 SkillLoop 项目, 解决企业隐性知识交换难题, 通过深度挖掘用户学习意图实现精准学习推荐, \textbf{荣获 Global Hackathon 全球三等奖}, 并代表中国区向 Microsoft AI CEO (Mustafa Suleyman) 汇报演示。
 
-\vspace{-5pt}
+\vspace{12pt}
 \noindent \rule{\textwidth}{0.5pt} % 分隔符
-\vspace{-5pt}
+\vspace{12pt}
 \noindent \textbf{阿里巴巴 AE 技术部} \hfill \textbf{2020.07-2022.10} \\
 \noindent \textbf{分别负责 AE 推荐业务中排序及召回模块,从全链路视角进行迭代升级,不断提升整个推荐链路的业务效率,助力系统精准匹配用户兴趣,取得了加收转化率+7\%,UV价值+12\%的效果。}
 
