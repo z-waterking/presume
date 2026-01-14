@@ -3,6 +3,6 @@ Hackathon2025/
 LLM分析报告/
 MSM DeepDive/
 .DS_Store
-*.docx
-*.wps
-*.pdf
+# *.docx
+# *.wps
+# *.pdf
