@@ -1,0 +1,33 @@
+ID	Module Name	内容	上游	备注
+L2Process1	Source merge	MSM_MergedSource_{yyyy-MM-dd}.L1v2.1_HighBidScore.Aggressive.txt		
+		MSM_MergedSource_{yyyy-MM-dd}.L1v2.1_HighCTRScore.Aggressive.txt
+		MSM_MergedSource_{yyyy-MM-dd}.L1v2.1_HighRankScore.Aggressive.txt
+L2Process2	Tiny source merge	MSM_MergedSource_2019-05-27.L1v2.1_Tiny_HighRankScore.Aggressive.txt		
+		MSM_MergedSource_2019-05-27.L1v2.1_Tiny_HighBidScore.Aggressive.txt
+		MSM_MergedSource_2019-05-27.L1v2.1_Tiny_HighCTRScore.Aggressive.txt
+L2Process3	AetherJobMSMDailyNeed	this is to generate historical good/bad click		
+		a. Historical Good: comes from [HighPriority] GetCleansedHistoricalData_V2
+		b. Historical Bad: comes from: 
+		    1. [MSM_Flight_Refresh]Monthly_Historical_Bad
+		    2. HistoricalQBRBad_ENUS_Bing
+		    3. Historical Bad files
+		c. Historical Data: comes from
+		    1. [MSM_Flight_Refresh]01.GetClickedSMPairs
+		    2. [MSM_Flight_Refresh]GoodClickRecall
+		
+		                Description: HistoricalGood Mining
+		 Part4: Merge Historical Data - Add Low Click Pairs for Runing Scoring Model
+		
+L2Process4	weekly_refreshing_pipeline			
+L2Process5	MSM_L2_Daily46 			
+L2Process6	MSM_L2_Daily48 			
+	
+L2Process7	MSM_L2_Daily49 			
+	
+L2Process8	MSM_L2_Daily50 			
+	
+L2Process9	MSM_L2_Daily51 			
+	
+				
+				
+				

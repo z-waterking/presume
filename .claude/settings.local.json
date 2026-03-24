@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls -la d:presume/*.pdf d:presume/*.docx d:presume/*.wps)",
+      "Bash(ls:*)"
+    ]
+  }
+}

@@ -1,0 +1,220 @@
+CodePath:
+	a. MSMRawDataAutoRefreshEncoding.exe: D:\zeqwu\repo\MSM\CSCode20190304\MSMRawDataAutoRefresh
+	b. UpdateDataSourceFileStatus2.exe: D:\zeqwu\repo\MSM\CSCode20190304\AetherDependencyFromYuantao\ProgrammaticAether
+
+
+
+	1. Pipeline Description
+		a. filter MSM_MergedSource_$$SubmitName$$.txt with valid query, keyword from DecileQuery, BroadBidAdCorpus in module: JoinDecile_DE_Blacklist
+		b. diff with two blackList: MSMBlackListQK.txt & $$SubmitName$$/Blacklist.txt in module: JoinDecile_DE_Blacklist
+		c. preprocess data and generate several features for next scoring steps in module: [Exp][QK]FeaturePreprocessor_L1, [Exp][QK]FeatureGenerator_1[L1] & [Exp][QK]FeatureGenerator_2[L1]
+		d. Scoring data with 3 models: Rank, CTR, AD, generate 3 scores for every row in module: L1Rank_Blacklist
+		e. select scoring result satisfying three Scorethresholds, referred as QKAfterThreshold in module: L1Rank_Blacklist
+		f. select top300 from QKAfterThreshold according to RankScore, CTRScore respectively and merge two results, referred as OutputPath in module: L1Rank_Blacklist
+		g. merge last $$SubmitName$$/Blacklist.txt of which date is less then 30 days, scoring result disSatisfying Scorethresholds and rank of CTRScore larger than 1800 in previous step in module: L1Rank_Blacklist
+		h. output merged Blacklist.txt to $$END_DATE$$/$$SubmitName$$/Blacklist.txt in module: ScopeOneInput
+		i. select top250 with biggest bid for every q from QKAfterThreshold of step e, output to Output1 in module: ScopeThreeInput_Generic
+		j. merge Output1 from step i with OutputPath from step f, output to Output3, which means recalling data with high bid, but filtered by rank of RankScore & CTRScore in module: ScopeThreeInput_Generic
+		k. left several MSMPruning modules are used to filter source according to entity match algos 
+		l. filter OutputPath from step f with result of step k in module: ScopeTwoInputs_SetExpiry_TPN, nodeId is 6e7019ea
+		m. filter Output1 from step i with result of step k in module: ScopeTwoInputs_SetExpiry_TPN, nodeId is dae8635a
+		n. compute several metric of result of step l in module: [Dashboard]SingleStream_GetMetrics
+		o. merge last Exp_Cleaned_Aggregate_L1_V2.1_V2.1_V1.1.txt with result of step l, do some diff and 
+		output to $$END_DATE$$/$$SubmitName$$/Exp_Cleaned_Aggregate_L1_V2.1_V2.1_V1.1.txt in module: ScopeTwoInputs_15Steps, nodeId is 0bbac516
+		p. sort merged result by rankScore * CTRScore, save top300 biggest to $$END_DATE$$/$$SubmitName$$/Exp_Cleaned_HighRankScore_Aggregate_L1_V2.1_V2.1_V1.1_Top300.txt 
+		in module: ScopeTwoInputs_15Steps, nodeId is 0bbac516
+		q. sort merged result by CTRScore, save top300 biggest to $$END_DATE$$/$$SubmitName$$/Exp_Cleaned_HighCTRScore_Aggregate_L1_V2.1_V2.1_V1.1_Top300.txt 
+		in module: ScopeTwoInputs_15Steps, nodeId is 0bbac516
+		r. merge last highBid data with new ones and output to $$END_DATE$$/$$SubmitName$$/Exp_Cleaned_Aggregate_L1_V2.1_V2.1_V1.1_HighBid.txt in module: ScopeTwoInputs_15Steps, nodeId is 4853281a
+		s. get latest 3 months query in decile 1-6 in module: [MSM_Flight_Refresh]PrepareDecileV2
+		t. filter new result of highRank, highCTR, highBid with decileQuery 1-6 respectively, output three results as below in module: SaveDecile1-6Pairs
+			i. Exp_Cleaned_Aggregate_L1_V2.1_V2.1_V1.1_HighBid.1-6.txt
+			ii. Exp_Cleaned_HighCTRScore_Aggregate_L1_V2.1_V2.1_V1.1_Top300.1-6.txt
+			iii. Exp_Cleaned_HighRankScore_Aggregate_L1_V2.1_V2.1_V1.1_Top300.1-6.txt
+Tips:
+	1. the value of END_DATE is submitted date of L1 scoring job
+
+
+ID	Module Name	内容	上游	备注
+L1Process1	PorterStemmer	D:\STC\JobManager\Scope\AutoRefresh\Transitive_PorterStemmer_CoBid\		1. porterStemmerSentence是什么
+		
+		0.61 GenerateQueryKeywordList_V2.script
+		Query, Decile
+		
+		0.62 DataSourceNormalization_V2.script
+		q, k, decileQ, decileK
+		
+		0.0 MergeHistGood.script
+		Good Q,K
+		
+		
+		0.9 GenerateTransitivePairs_Porter2Stemmer_Source2_Cluster.script
+		porterStemmerSentence()
+		        a. Split(' ', ',', '/', '(', ')', '\\', ';')
+		        
+		0.9 GenerateTransitivePairs_Porter2Stemmer_HisGood.script
+		 Generating MSMPairs with Porter Stemmer
+		        Based on Historical Good MSM/PM/BM/SM Pairs   
+		
+		
+		
+		
+		0.9 GenerateTransitivePairs_Porter2Stemmer_QKCluster.script
+		 Generating MSMPairs with Porter Stemmer
+		                Based on only Query and Keyword   
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+L1Process2	Transitive	Aether job:		
+		08fb79e9-bbcf-42b5-b3d6-4bebb9706887
+		
+		Transitive join:
+		Q1,k1,q2,k2->q1,k2
+		
+		
+		
+		
+		
+		
+L1Process3	L1_non_transitive	D:\STC\JobManager\MSMRawDataAutoRefresh\MSMRawDataAutoRefreshEncoding.exe		exe怎么看？
+		
+		D:\STC\JobManager\MSMRawDataAutoRefresh\Scripts\HighPriority_MergeMSMRawDataSource.script
+		
+		D:\STC\JobManager\MSMRawDataAutoRefresh\UpdateDataSourceFileStatus.exe
+		
+		D:\STC\JobManager\AetherConsole_msmL1\ScoringPipeline.exe
+L1Process4	L1_transitive	D:\STC\JobManager\MSMRawDataAutoRefresh\MSMRawDataAutoRefreshEncoding.exe		
+		
+		D:\STC\JobManager\MSMRawDataAutoRefresh\Scripts\HighPriority_MergeMSMTransitiveRawDataSource.script
+		
+		D:\STC\JobManager\Scope\AutoRefresh\MSMRawDataSource_Transitive\WindowsFormsApplication1.exe
+		
+		D:\STC\JobManager\AetherConsole_msmL1\ScoringPipeline.exe
+L1Process5	L1_transitive_coclick	D:\STC\JobManager\MSMRawDataAutoRefresh\MSMRawDataAutoRefreshEncoding.exe		
+		
+		D:\STC\JobManager\MSMRawDataAutoRefresh\Scripts\HighPriority_MergeMSMTransitiveCoclickRawDataSource.script
+		
+		D:\STC\JobManager\MSMRawDataAutoRefresh\UpdateDataSourceFileStatus2.exe
+		
+		D:\STC\JobManager\AetherConsole_msmL1\Transitive_Coclick.cmd
+L1Process6				
+L1Process7				
+L1Process8				
+L1Process9				
+CodePath:
+	a. MSMRawDataAutoRefreshEncoding.exe: D:\zeqwu\repo\MSM\CSCode20190304\MSMRawDataAutoRefresh
+	b. UpdateDataSourceFileStatus2.exe: D:\zeqwu\repo\MSM\CSCode20190304\AetherDependencyFromYuantao\ProgrammaticAether
+
+
+
+	1. Pipeline Description
+		a. filter MSM_MergedSource_$$SubmitName$$.txt with valid query, keyword from DecileQuery, BroadBidAdCorpus in module: JoinDecile_DE_Blacklist
+		b. diff with two blackList: MSMBlackListQK.txt & $$SubmitName$$/Blacklist.txt in module: JoinDecile_DE_Blacklist
+		c. preprocess data and generate several features for next scoring steps in module: [Exp][QK]FeaturePreprocessor_L1, [Exp][QK]FeatureGenerator_1[L1] & [Exp][QK]FeatureGenerator_2[L1]
+		d. Scoring data with 3 models: Rank, CTR, AD, generate 3 scores for every row in module: L1Rank_Blacklist
+		e. select scoring result satisfying three Scorethresholds, referred as QKAfterThreshold in module: L1Rank_Blacklist
+		f. select top300 from QKAfterThreshold according to RankScore, CTRScore respectively and merge two results, referred as OutputPath in module: L1Rank_Blacklist
+		g. merge last $$SubmitName$$/Blacklist.txt of which date is less then 30 days, scoring result disSatisfying Scorethresholds and rank of CTRScore larger than 1800 in previous step in module: L1Rank_Blacklist
+		h. output merged Blacklist.txt to $$END_DATE$$/$$SubmitName$$/Blacklist.txt in module: ScopeOneInput
+		i. select top250 with biggest bid for every q from QKAfterThreshold of step e, output to Output1 in module: ScopeThreeInput_Generic
+		j. merge Output1 from step i with OutputPath from step f, output to Output3, which means recalling data with high bid, but filtered by rank of RankScore & CTRScore in module: ScopeThreeInput_Generic
+		k. left several MSMPruning modules are used to filter source according to entity match algos 
+		l. filter OutputPath from step f with result of step k in module: ScopeTwoInputs_SetExpiry_TPN, nodeId is 6e7019ea
+		m. filter Output1 from step i with result of step k in module: ScopeTwoInputs_SetExpiry_TPN, nodeId is dae8635a
+		n. compute several metric of result of step l in module: [Dashboard]SingleStream_GetMetrics
+		o. merge last Exp_Cleaned_Aggregate_L1_V2.1_V2.1_V1.1.txt with result of step l, do some diff and 
+		output to $$END_DATE$$/$$SubmitName$$/Exp_Cleaned_Aggregate_L1_V2.1_V2.1_V1.1.txt in module: ScopeTwoInputs_15Steps, nodeId is 0bbac516
+		p. sort merged result by rankScore * CTRScore, save top300 biggest to $$END_DATE$$/$$SubmitName$$/Exp_Cleaned_HighRankScore_Aggregate_L1_V2.1_V2.1_V1.1_Top300.txt 
+		in module: ScopeTwoInputs_15Steps, nodeId is 0bbac516
+		q. sort merged result by CTRScore, save top300 biggest to $$END_DATE$$/$$SubmitName$$/Exp_Cleaned_HighCTRScore_Aggregate_L1_V2.1_V2.1_V1.1_Top300.txt 
+		in module: ScopeTwoInputs_15Steps, nodeId is 0bbac516
+		r. merge last highBid data with new ones and output to $$END_DATE$$/$$SubmitName$$/Exp_Cleaned_Aggregate_L1_V2.1_V2.1_V1.1_HighBid.txt in module: ScopeTwoInputs_15Steps, nodeId is 4853281a
+		s. get latest 3 months query in decile 1-6 in module: [MSM_Flight_Refresh]PrepareDecileV2
+		t. filter new result of highRank, highCTR, highBid with decileQuery 1-6 respectively, output three results as below in module: SaveDecile1-6Pairs
+			i. Exp_Cleaned_Aggregate_L1_V2.1_V2.1_V1.1_HighBid.1-6.txt
+			ii. Exp_Cleaned_HighCTRScore_Aggregate_L1_V2.1_V2.1_V1.1_Top300.1-6.txt
+			iii. Exp_Cleaned_HighRankScore_Aggregate_L1_V2.1_V2.1_V1.1_Top300.1-6.txt
+Tips:
+	1. the value of END_DATE is submitted date of L1 scoring job
+
+
+ID	Module Name	内容	上游	备注
+L1Process1	PorterStemmer	D:\STC\JobManager\Scope\AutoRefresh\Transitive_PorterStemmer_CoBid\		1. porterStemmerSentence是什么
+		
+		0.61 GenerateQueryKeywordList_V2.script
+		Query, Decile
+		
+		0.62 DataSourceNormalization_V2.script
+		q, k, decileQ, decileK
+		
+		0.0 MergeHistGood.script
+		Good Q,K
+		
+		
+		0.9 GenerateTransitivePairs_Porter2Stemmer_Source2_Cluster.script
+		porterStemmerSentence()
+		        a. Split(' ', ',', '/', '(', ')', '\\', ';')
+		        
+		0.9 GenerateTransitivePairs_Porter2Stemmer_HisGood.script
+		 Generating MSMPairs with Porter Stemmer
+		        Based on Historical Good MSM/PM/BM/SM Pairs   
+		
+		
+		
+		
+		0.9 GenerateTransitivePairs_Porter2Stemmer_QKCluster.script
+		 Generating MSMPairs with Porter Stemmer
+		                Based on only Query and Keyword   
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+L1Process2	Transitive	Aether job:		
+		08fb79e9-bbcf-42b5-b3d6-4bebb9706887
+		
+		Transitive join:
+		Q1,k1,q2,k2->q1,k2
+		
+		
+		
+		
+		
+		
+L1Process3	L1_non_transitive	D:\STC\JobManager\MSMRawDataAutoRefresh\MSMRawDataAutoRefreshEncoding.exe		exe怎么看？
+		
+		D:\STC\JobManager\MSMRawDataAutoRefresh\Scripts\HighPriority_MergeMSMRawDataSource.script
+		
+		D:\STC\JobManager\MSMRawDataAutoRefresh\UpdateDataSourceFileStatus.exe
+		
+		D:\STC\JobManager\AetherConsole_msmL1\ScoringPipeline.exe
+L1Process4	L1_transitive	D:\STC\JobManager\MSMRawDataAutoRefresh\MSMRawDataAutoRefreshEncoding.exe		
+		
+		D:\STC\JobManager\MSMRawDataAutoRefresh\Scripts\HighPriority_MergeMSMTransitiveRawDataSource.script
+		
+		D:\STC\JobManager\Scope\AutoRefresh\MSMRawDataSource_Transitive\WindowsFormsApplication1.exe
+		
+		D:\STC\JobManager\AetherConsole_msmL1\ScoringPipeline.exe
+L1Process5	L1_transitive_coclick	D:\STC\JobManager\MSMRawDataAutoRefresh\MSMRawDataAutoRefreshEncoding.exe		
+		
+		D:\STC\JobManager\MSMRawDataAutoRefresh\Scripts\HighPriority_MergeMSMTransitiveCoclickRawDataSource.script
+		
+		D:\STC\JobManager\MSMRawDataAutoRefresh\UpdateDataSourceFileStatus2.exe
+		
+		D:\STC\JobManager\AetherConsole_msmL1\Transitive_Coclick.cmd
+L1Process6				
+L1Process7				
+L1Process8				
+L1Process9				

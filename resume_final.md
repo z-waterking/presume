@@ -18,8 +18,8 @@
     *   **分层排序架构**：设计 L1 粗排 + L2 精排的漏斗架构。在 L1 阶段引入 Pareto Optimization 思想, 构建由 Revenue、CTR 和 Relevance 构成的 Multi-Objective (多目标) 优化空间, 动态平衡商业变现与用户体验。北美市场 RPM +1.8%, CN 市场 Revenue +2%。获 Greatness Award。
 
 *   **AI Agent 平台与开发范式: BingViz Agents (业务分析) & SkillLoop (Vibe Coding)**
-    *   **深度分析引擎**：基于 LLM + MCP 架构，构建专注于复杂归因的深度业务分析引擎。融合 ClickHouse(实时) 与 Databricks(离线) 数仓, 利用 LangGraph 实现图导向的推理执行。设计 Automatic Context Propagation 机制, 替代不稳定的 ReAct 循环, 实现“大盘扫描 -> 下钻归因”的稳健思维链, 成功自动归因欧洲市场 RPM 波动根因, 直接支持业务战略决策。
-    *   **开发范式探索**：在 Global Hackathon 中发起 SkillLoop 项目, 首创 "Document-Driven Development" 范式。设计基于 Structured Task Log 的系统协议, 强制 Agent 维护“自包含”的工程状态, 解决长周期开发中的上下文丢失难题, 显著缩短开发周期。项目荣获 Global 3rd Place (全球季军), 并作为 OPE 标杆向 Microsoft AI CEO (Mustafa Suleyman) 汇报。
+    *   **深度分析引擎**：基于 LLM + MCP 架构，构建专注于复杂归因的深度业务分析引擎。融合 ClickHouse(实时) 与 Databricks(离线) 数仓, 利用 LangGraph 实现图导向的推理执行。设计 Automatic Context Propagation 机制, 替代不稳定的 ReAct 循环, 实现"大盘扫描 -> 下钻归因"的稳健思维链, 成功自动归因欧洲市场 RPM 波动根因, 直接支持业务战略决策。
+    *   **开发范式探索**：在 Global Hackathon 中发起 SkillLoop 项目, 首创 "Document-Driven Development" 范式。设计基于 Structured Task Log 的系统协议, 强制 Agent 维护"自包含"的工程状态, 解决长周期开发中的上下文丢失难题, 显著缩短开发周期。项目荣获 Global 3rd Place (全球季军), 并作为 OPE 标杆向 Microsoft AI CEO (Mustafa Suleyman) 汇报。
 
 ---
 

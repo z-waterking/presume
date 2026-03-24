@@ -1,8 +1,10 @@
+# Binary files
+*.pdf
+*.docx
+*.wps
+.DS_Store
+Thumbs.db
+
+# Large project folders (source code, not resume content)
 BingVizAgents/
 Hackathon2025/
-LLM分析报告/
-MSM DeepDive/
-.DS_Store
-# *.docx
-# *.wps
-# *.pdf
