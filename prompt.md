@@ -14,42 +14,51 @@
 
 ## File Management (文件管理规范)
 
+> 完整工作流规范请见 `AGENT.md`。以下为核心结构速览。
+
 ```
 presume/
-├── prompt.md              ← 你正在阅读的文件 (AI 指导规范)
-├── resume_draft.md        ← 深度底稿 / 知识库 (所有技术细节、访谈记录、原始素材)
-├── resume_final.md        ← 唯一对外的最终简历 (精炼版)
-├── resume_sifan_zhang.tex ← LaTeX 源文件 (用于生成 PDF)
-├── fonts/                 ← LaTeX 字体文件
-├── interview/             ← 模拟面试准备材料
-│   ├── 00_self_intro.md       — 自我介绍 (中英文)
-│   ├── 01_agent_bingviz.md    — BingViz Agents & SkillLoop 深度解析
-│   ├── 02_msm_search_ads.md   — Meta Smart Match 搜索广告深度解析
-│   ├── 03_alibaba_recsys.md   — 阿里推荐系统深度解析
-│   ├── 04_behavioral.md       — 行为面试 (STAR 法则)
-│   └── 05_study_guide.md      — 学习资源与练习路线
-├── references/            ← 参考材料汇总
-│   ├── LLM分析报告/           — Claude/Gemini/Qwen 对比研究
-│   └── MSM DeepDive/          — 搜索广告技术深度文档
-├── BingVizAgents/         ← Agent 平台源码 (佐证材料)
-└── Hackathon2025/         ← SkillLoop 源码 (佐证材料)
+├── AGENT.md               ← 完整工作流规范
+├── prompt.md              ← 你正在阅读的文件 (AI 角色设定 & 面试指令集)
+├── A_resume/              ← [A 前缀置顶] 简历管理
+│   ├── resume_draft.md        — 初始底稿 / 知识库
+│   ├── resume_final.md        — 最终投递版 (唯一对外)
+│   ├── OverLeaf/              — LaTeX 排版 (main.tex + fonts/)
+│   └── versions/              — 修改版本存档 (前缀命名，可追溯)
+├── interview/             ← 面试准备 (基于 resume 展开)
+│   ├── 00_self_intro.md       — 自我介绍
+│   ├── 01-03_*.md             — 各项目技术深挖
+│   ├── 04_behavioral.md       — 行为面试
+│   └── 05_study_guide.md      — 学习路线
+├── references/            ← 工作内容参考材料 (用于整理 resume)
+│   ├── BingVizAgents/         — Agent 平台源码
+│   ├── Hackathon2025/         — SkillLoop 源码
+│   ├── LLM分析报告/           — LLM 对比研究
+│   └── MSM DeepDive/          — 搜索广告技术文档
+└── docs/                  ← 文档 & 学习资料
+    ├── links.md               — 链接收集 (待阅读/已阅读)
+    ├── notes.md               — 阅读笔记
+    └── materials/             — 下载的文档材料
 ```
 
 ### 核心原则
-1. **Single Final Resume**: 始终只维护一份最终简历文件 `resume_final.md`，它是唯一对外的产出物。
-2. **Draft as Knowledge Base**: `resume_draft.md` 是所有深度信息的收集地，包含详尽的技术细节和原始素材。
-3. **Interview as Practice Ground**: `interview/` 文件夹是面试准备的知识库，包含各项目的深度解析和模拟问答。
+1. **Single Final Resume**: 始终只维护一份最终简历 `A_resume/resume_final.md`，它是唯一对外的产出物。
+2. **Draft as Knowledge Base**: `A_resume/resume_draft.md` 是所有深度信息的收集地，包含详尽的技术细节和原始素材。
+3. **Version Tracking**: 每次重大修改前，将当前 final 存入 `A_resume/versions/`，前缀命名确保可追溯。
+4. **Interview as Practice Ground**: `interview/` 是面试准备的知识库，简历变则面试材料跟着变。
+5. **Docs as Learning Hub**: `docs/` 独立管理学习链接和阅读材料。
 
 ---
 
 ## Workflow (工作流程)
 
 ### Phase 1: 简历维护
-当需要更新简历时，遵循以下流程：
-1. **信息收集** → 更新 `resume_draft.md`
-2. **提炼优化** → 使用 STAR 法则，用 "Action Verb + Task + Result" 撰写
-3. **更新终稿** → 同步更新 `resume_final.md` 和 `.tex` 文件
-4. **Review 反馈** → 直接在 `resume_draft.md` 中标注修改建议 (不再单独维护 review.md)
+当需要更新简历时，遵循以下流程（详见 `AGENT.md` 完整工作流）：
+1. **信息收集** → 从 `references/` 提取素材，更新 `A_resume/resume_draft.md`
+2. **存档版本** → 将当前 `resume_final.md` 复制到 `A_resume/versions/` (前缀命名)
+3. **提炼优化** → 使用 STAR 法则，用 "Action Verb + Task + Result" 撰写
+4. **更新终稿** → 同步更新 `A_resume/resume_final.md` 和 `A_resume/OverLeaf/main.tex`
+5. **联动面试** → 如涉及项目变更，同步更新 `interview/` 对应文件
 
 ### Phase 2: 模拟面试
 当切换为面试模拟模式时：

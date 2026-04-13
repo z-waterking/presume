@@ -4,10 +4,14 @@
 *.wps
 .DS_Store
 Thumbs.db
+~$*
 
 # Reference materials (binary docs, not core resume content)
 references/
 
-# Large project folders (source code, not resume content)
-BingVizAgents/
-Hackathon2025/
+# Downloaded documents in docs
+docs/materials/
+
+# Temp files
+*.tmp
+*.bak
