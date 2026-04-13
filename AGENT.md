@@ -1,3 +1,8 @@
+---
+aliases: [工作流规范, AGENT]
+tags: [求职, 工作流]
+---
+
 # 📋 Job Hunting Workspace — Agent 工作流规范
 
 > **核心原则**: 每一步可追溯，分类清晰，版本有序。
@@ -7,10 +12,12 @@
 ## 目录结构总览
 
 ```
-presume/
+presume/                              ← 同时也是 Obsidian 库根目录
 │
 ├── AGENT.md                          ← 你正在阅读的文件 (工作流规范，顶层锚点)
+├── 求职准备 MOC.md                    ← Obsidian 总入口 (Map of Content)
 ├── prompt.md                         ← AI 角色设定 & 面试模拟指令集
+├── .obsidian/                        ← Obsidian 配置 (gitignore)
 ├── .gitignore
 │
 ├── A_resume/                         ← [A 前缀] 简历管理 (排序置顶)
@@ -29,6 +36,16 @@ presume/
 │   ├── 03_alibaba_recsys.md          ← 阿里推荐系统深度解析
 │   ├── 04_behavioral.md              ← 行为面试 (STAR 法则)
 │   └── 05_study_guide.md             ← 学习资源与练习路线
+│
+├── 学习材料/                          ← 面试学习材料 (Obsidian checkbox 追踪进度)
+│   ├── 学习-推荐系统.md               ← 🔴 主攻: 论文 + 关键词 + 追问
+│   ├── 学习-计算广告.md               ← 🔴 主攻: 论文 + 关键词 + 追问
+│   └── 学习-AI Agent.md              ← 🟡 辅攻: P0/P1/P2 分层
+│
+├── 笔记/                             ← 随手记 (让 Claude 帮你整理)
+│   ├── 快速笔记.md                    ← 想法、灵感、待办
+│   ├── 论文笔记.md                    ← 看论文时的记录
+│   └── 面试复盘.md                    ← 每次面试后的复盘
 │
 ├── references/                       ← 工作内容参考材料 (用于整理 resume)
 │   ├── BingVizAgents/                ← Agent 平台源码

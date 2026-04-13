@@ -6,6 +6,9 @@
 Thumbs.db
 ~$*
 
+# Obsidian config (local settings, not shared)
+.obsidian/
+
 # Reference materials (binary docs, not core resume content)
 references/
 

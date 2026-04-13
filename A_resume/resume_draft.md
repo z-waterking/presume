@@ -1,3 +1,8 @@
+---
+aliases: [简历底稿, resume_draft]
+tags: [求职, 简历]
+---
+
 # 张思凡 Sifan Zhang — 深度底稿 / Knowledge Base
 > 此文件是所有简历信息的原始素材库，包含详尽技术细节、修改记录和待优化点。
 > 对外简历请见 `resume_final.md`。

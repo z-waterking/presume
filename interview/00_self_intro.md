@@ -1,3 +1,8 @@
+---
+aliases: [自我介绍, self intro]
+tags: [求职, 面试]
+---
+
 # 自我介绍 (Self Introduction)
 
 ## 中文主要自述 (2-3分钟版本)

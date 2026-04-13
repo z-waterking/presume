@@ -1,3 +1,8 @@
+---
+aliases: [面试-BingViz Agents, BingViz面试]
+tags: [求职, 面试, Agent]
+---
+
 # 项目深度解析：微软 BingViz Agents & SkillLoop
 
 ## 项目背景 (Context)

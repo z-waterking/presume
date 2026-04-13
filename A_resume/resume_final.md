@@ -1,3 +1,8 @@
+---
+aliases: [简历终稿, resume_final]
+tags: [求职, 简历]
+---
+
 # 张思凡
 13260151230 | zhangsifanbj@163.com | 北京市海淀区
 

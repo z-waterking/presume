@@ -1,3 +1,8 @@
+---
+aliases: [面试-行为面试, 行为面试]
+tags: [求职, 面试]
+---
+
 # 综合素质与行为面试 (Behavioral & Soft Skills)
 
 ---
