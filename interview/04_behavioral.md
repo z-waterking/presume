@@ -70,3 +70,18 @@ tags: [求职, 面试]
 **A:**
 *   BingViz 的归因 Case。Agent 发现欧洲 RPM 下降不是广告系统问题，而是用户搜索意图结构性偏差。
 *   这不仅是技术成就，更体现了 AI 系统真正帮助人类做出更好决策的价值。整个分析过程从"发现异常"到"定位根因"全自动完成，这是从 Text-to-SQL 到 Text-to-Insight 的质变。
+
+### Q6: 描述一次你失败的经历？(Tell me about a time you failed)
+**A:**
+*   **Situation**: 在阿里做召回融合的早期版本时，我最初尝试用 RL (Contextual Bandit) 来动态分配各路召回配额。
+*   **Action**: 花了两周实现了一个基于 Thompson Sampling 的方案，在离线环境效果不错。
+*   **Result**: 上线后发现 RL 的 Exploration 导致短期指标波动，业务方无法接受。最终不得不回滚。
+*   **Takeaway**: 这次失败让我认识到：在成熟业务线上，方案的"可解释性"和"可控性"比算法的理论最优性更重要。后来改用 Borda Count 方案，虽然理论上不如 RL 优雅，但可解释、可调控，反而取得了 GMV +2.4% 的稳定提升。这也是我后来在微软做技术选型时始终坚持"MVP 先行、数据说话"的原因。
+
+### Q7: 描述一次跨团队协作的经历？
+**A:**
+*   **Situation**: BingViz 项目需要和数据分析师团队（DAT）以及 PM 紧密合作。分析师懂业务但不懂 Agent，PM 关注交付时间但不了解 LLM 的局限性。
+*   **Action**:
+    *   **和分析师**: 定期 Pair Session，让分析师用自然语言描述分析流程，我转化为 Agent 的 Workflow 节点。他们的领域知识成为了 Prompt 设计的核心输入。
+    *   **和 PM**: 建立了一套 Agent 能力边界的 Demo Matrix（能做/不能做/需要人介入），用具体 Case 管理预期，避免 over-promise。
+*   **Result**: 分析师从"怀疑 AI 能不能用"变成了主动提需求的用户。PM 也因为有清晰的能力边界文档，能更准确地对外 communicate timeline。

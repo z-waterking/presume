@@ -21,7 +21,7 @@ tags: [求职, 面试, 搜索广告]
 
 我设计了基于 **二部图 (Bipartite Graph)** 的挖掘算法。利用用户的点击日志，构建了 Query-Ad 的点击图。利用 **Transitive Join (传递连接)** 思想：如果 Query A 点击了 Ad X，且 Query B 也点击了 Ad X，那么 Query A 和 B 在语义上大概率是相似的。
 
-通过挖掘这种 A→Ad→B 的高阶关系，我们挖掘出了大量非直观的共现关系。配合 NLP Rewriting 技术做语义约束，显著提升了长尾 Query 的覆盖率。"
+通过挖掘这种 A→Ad→B 的间接共现关系，我们挖掘出了大量非直观的语义关联。配合 NLP Rewriting 技术做语义约束，显著提升了长尾 Query 的覆盖率。"
 
 ### 2. 分层排序架构 (Tiered Ranking with Pareto)
 "召回多了，排序压力就大了。我设计了 **L1 粗排 + L2 精排** 的漏斗架构。
@@ -59,7 +59,7 @@ tags: [求职, 面试, 搜索广告]
 **A:**
 是的，最工程化的落地方式是 **Linear Scalarization** (线性加权)。
 *   公式: `Score = w1 * pCTR * Bid + w2 * RelevanceScore`
-*   权重 w 不是拍脑袋定的，而是通过 **PID 控制器**动态调整，或通过离线 Grid Search 在 Pareto 曲线上找到最佳 Trade-off 点。
+*   权重 w 不是拍脑袋定的，而是通过离线 **Grid Search** 在 Pareto 曲线上扫描多组权重组合，找到最佳 Trade-off 点（即 Pareto Frontier 上 Revenue 增益最大且 Relevance 不退化的点）。
 
 ### Q5: 1.8% 的 RPM 提升对你们组来说是什么水平？
 **A:**

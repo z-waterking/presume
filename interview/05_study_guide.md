@@ -88,3 +88,35 @@ tags: [求职, 学习]
 
 ### 第三阶段: 方法论总结 (持续)
 结合 Chip Huyen 博客，总结一套你自己的 "Agent 评估与归因分析框架"。你在微软做的归因分析是极大的亮点，要把这套逻辑抽象成通用的方法论——这是面试资深岗位 (SDE 2 / Senior) 的关键。
+
+---
+
+## 六、系统设计 (System Design) 专项
+
+> SDE 2 / Senior 级别的面试重头戏，必须准备。
+
+### 必练题目 (结合自身项目)
+1.  **Design a Recommendation System** — 直接映射阿里项目，重点讲召回→粗排→精排→重排的漏斗架构
+2.  **Design an Ad Serving System** — 直接映射 MSM 项目，重点讲 Auction、Budget Pacing、Real-time Bidding
+3.  **Design an LLM Agent Platform** — 直接映射 BingViz，重点讲 Tool Orchestration、Context Management、Evaluation
+4.  **Design a Real-time Feature Store** — 覆盖你在阿里做的实时样本流、延迟 Label 归因
+
+### 推荐资源
+- **ByteByteGo**: System Design Interview 系列（图解清晰）
+- **Alex Xu**: System Design Interview Vol 1 & 2
+- **ML System Design**: Chip Huyen — Designing ML Systems (O'Reilly)
+
+---
+
+## 七、Coding 面试准备
+
+> 即使是 AI 方向，大厂通常也有 1-2 轮 Coding。
+
+### 刷题策略
+- **LeetCode 精选 150 题** (Neetcode 150)：覆盖高频数据结构与算法
+- **重点**: Array/String、Graph (映射你的二部图经验)、Tree (映射 Agent 的决策树)、DP
+- **每日目标**: 2-3 题，Medium 为主
+
+### ML Coding (手写实现)
+- DeepML 上手写: Attention、Adam、LayerNorm、Beam Search
+- 手写: AUC 计算、NDCG 计算、TF-IDF（这些和你的项目直接相关）
