@@ -104,3 +104,131 @@ Hot Ad 问题面试答法：
  NLP增强      结果: RPM +1.8%
  Stemmer+BERT  Greatness Award
 ```
+
+---
+
+## 系统位置速记
+
+```text
+User Query
+  │
+  ├── Exact / Phrase Match
+  ├── Keyword Broad Match
+  ├── MSM Semantic Recall  ← 你的项目
+  └── Other Recall Sources
+  │
+  ▼
+Candidate Merge / Dedup
+  │
+  ▼
+Downstream Ranking + Auction
+  │
+  ▼
+Ad Impression / Click / Conversion
+```
+
+一句话定位：MSM 控制的是「语义召回候选质量」，不是全局最终排序和拍卖。
+
+## Query-Ad 图挖掘白板例子
+
+```text
+Q1: "cheap flight to paris"  -> Ad_A: travel booking
+Q2: "paris vacation deals"   -> Ad_A: travel booking
+Q2: "paris vacation deals"   -> Ad_B: hotel package
+
+Transitive candidate:
+Q1 -> Ad_A -> Q2 -> Ad_B
+So Q1 may match Ad_B.
+```
+
+为什么有效：Q1 和 Q2 文本不完全一样，但共享了真实点击广告 Ad_A，说明用户商业意图相近。
+
+为什么危险：如果 Ad_A 是 Amazon、YouTube、Weather 这类超高 degree 广告，就会把很多不相关 query 连起来。
+
+解决：对 Ad_A 做 degree penalty，并要求 query intent 一致、边权足够高、多路径支持。
+
+## L1 / L2 细节口径
+
+### L1 做什么
+
+- 输入：离线图挖掘和 rewriting 生成的大量候选。
+- 目标：用轻量特征快速过滤明显差的候选，同时保留多目标多样性。
+- 特征：edge weight、query/ad click、CTR、ad quality、relevance score、degree penalty、intent consistency。
+- 方法：Pareto 或 scalarization，不只按 revenue 截断。
+
+### L2 做什么
+
+- 输入：L1 之后的较小候选集。
+- 目标：更精细地判断 query-ad 相关性和商业价值。
+- 特征：更复杂的文本相似、历史表现、广告质量、黑白名单、market/language 规则。
+- 输出：给下游广告排序系统的一路候选。
+
+### 关键边界
+
+- L1/L2 是 MSM 内部质量漏斗。
+- 下游 ranking/auction 会融合其他召回源，并结合 bid、quality、pCTR 决定展示。
+
+## Pareto 面试讲法
+
+先讲直觉：
+
+> 如果只按 revenue，可能留下出价高但相关性差的广告；如果只按 relevance，商业收益不足。Pareto 的作用是在 L1 阶段保留没有被全面支配的候选，让 L2 和下游有更好的选择空间。
+
+再讲数学：
+
+```text
+Candidate A dominates B if:
+Revenue_A >= Revenue_B
+CTR_A >= CTR_B
+Relevance_A >= Relevance_B
+and one dimension is strictly better.
+```
+
+最后讲工程：
+
+- 真正线上不一定显式求完整三维 frontier，可能用归一化加权、阈值约束、分桶 topK 近似。
+- Linear scalarization 快，但对非凸 frontier 有局限。
+- 兜底是 relevance hard constraint、bad match blacklist、latency budget。
+
+## 实验复盘口径
+
+### RPM +1.8% 如何讲可信
+
+1. A/B 随机分桶，而不是上线前后直接比。
+2. 分 market、device、query bucket、commercial intent 看收益是否一致。
+3. 看 guardrail：relevance、CTR、complaint、latency、advertiser ROI。
+4. 看 diagnostic：MSM coverage、ad depth、downstream pass rate、bad match rate。
+5. 成熟广告系统基线高，小幅收益也要统计显著，可用 CUPED 降方差。
+
+### 如果面试官质疑 revenue 涨是季节性
+
+回答：看 control/treatment 同期差异，并按历史 pre-period 校准；如果 treatment 相对 control 在多个市场和 query bucket 都提升，而且 guardrail 稳定，才认为是算法增量。
+
+## 追问答案库
+
+### Q1：为什么不用纯 embedding 召回？
+
+Embedding 能捕捉文本语义，但搜索广告更关心商业意图。点击图来自真实用户和广告互动，能发现文本不相似但商业目的相近的关系。最稳的是图挖掘、rewriting、embedding 多路互补。
+
+### Q2：Hot Ad 软降权为什么比硬删好？
+
+硬删会伤害头部商业 query，因为热门广告对某些 query 确实相关。软降权只降低它作为桥节点传播语义的能力，保留真实高质量边。
+
+### Q3：Query rewriting 怎么防止语义漂移？
+
+离线生成高置信同义词，按 market/language/intent 分桶；上线前做人工抽检和 bad match 评估；在线用黑白名单、relevance threshold 和 guardrail 控制。
+
+### Q4：L1 为什么要 Pareto，而不是把候选都交给 L2？
+
+候选太多会拖慢下游，也会让低质量候选污染排序。L1 要做便宜但不能太粗暴的质量控制，Pareto 能避免单目标截断杀掉高潜候选。
+
+### Q5：RPM 提升但 CTR 下降怎么办？
+
+要看下降幅度、relevance、长期体验和广告主 ROI。若 CTR 下降来自低质曝光增多，不能上线；若 revenue 提升且 relevance/complaint/ROI 稳定，需要进一步分桶确认是否是 query mix 变化。
+
+## 风险边界
+
+- 不说 MSM 是完整广告排序系统；它是语义召回和质量筛选模块。
+- 不把 L1/L2 说成全局粗排/精排；要强调是 MSM 内部漏斗。
+- 不说图挖掘一定比 embedding 好；二者信号不同，最好互补。
+- 不只报 RPM，要主动补 guardrail，显得更可信。

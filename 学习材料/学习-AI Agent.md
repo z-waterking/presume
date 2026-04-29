@@ -176,3 +176,128 @@ related: "[[面试-BingViz Agents]], [[简历底稿]]"
 - [ ] 1 页纸：MCP vs Function Calling vs 内置 Tool Registry。
 - [ ] 5 个 30 秒答案：ReAct 不稳、Context Propagation、MCP、Schema Validation、Structured Task Log。
 - [ ] 1 个 5 分钟答案：从零设计一个业务归因分析 Agent 平台。
+
+---
+
+## 8. 7 天冲刺路线
+
+### Day 1：把 Agent 控制流讲清
+
+- 读 Anthropic Building Effective Agents，区分 workflow 和 autonomous agent。
+- 读 ReAct 摘要和方法部分，只抓住 Thought / Action / Observation 的控制权问题。
+- 输出：一张 ReAct 失败模式表，列出发散、循环、遗忘、工具误用、token 膨胀。
+
+### Day 2：把 Context Propagation 讲成工程方案
+
+- 画 BingViz 归因 DAG：root、market drilldown、query intent、coverage、bid/CTR、final synthesis。
+- 写 Context Object JSON schema，字段必须包含 `facts`、`hypotheses`、`constraints`、`evidence`、`confidence`、`next_actions`。
+- 输出：30 秒版和 3 分钟版两套回答。
+
+### Day 3：MCP 和工具安全
+
+- 读 MCP lifecycle、tools、resources、transport。
+- 对比 function calling、plugin registry、MCP server 三种模式。
+- 输出：一个只读 SQL 工具的参数 schema、权限边界、失败重试策略。
+
+### Day 4：Agent Evaluation
+
+- 读 Ragas / DeepEval / LangSmith 的核心指标。
+- 把 BingViz evaluation 拆成 tool-level、step-level、answer-level、business-level。
+- 输出：一张 evaluation rubric，包含 success、smart-fail、understand-fail、tech-fail、no-response。
+
+### Day 5：SkillLoop 方法论
+
+- 对比 TDD、ADR、PRD、runbook、Structured Task Log。
+- 输出：一个开发任务的 Task Log 样例，必须包含目标、计划、依赖、决策、验证结果。
+
+### Day 6：安全与生产化
+
+- 读 OWASP LLM Top 10 中 prompt injection、data leakage、excessive agency、tool misuse。
+- 输出：BingViz 的安全边界：只读、SQL allowlist、scan limit、schema validation、human approval。
+
+### Day 7：系统设计串讲
+
+- 用 5 分钟讲完「从零设计业务归因 Agent 平台」。
+- 必须覆盖数据源、语义层、工具层、workflow、context、evaluation、observability、deployment。
+
+## 9. 论文与资料卡片模板
+
+每篇材料读完只写 6 行，避免陷入全文摘抄：
+
+```text
+资料名：
+解决的问题：
+核心方法：
+和我简历的连接：
+面试可用一句话：
+局限与风险：
+```
+
+建议优先做这些卡片：
+
+| 资料 | 解决的问题 | 简历连接 | 一句话口径 |
+| ---- | ---------- | -------- | ---------- |
+| ReAct | 推理与行动交替 | Context Propagation 的基线 | ReAct 强在灵活，弱在长链路可控性 |
+| Plan-and-Solve | 先规划再求解 | 归因 DAG 的 planning 层 | 规划把开放式搜索变成可检查步骤 |
+| Tree of Thoughts | 多路径搜索 | 多根因假设探索 | 适合探索多个 hypothesis，但成本更高 |
+| Reflexion | 失败后反思改进 | Validation Results | 反思要落到外部状态和验证结果，否则仍会漂移 |
+| MCP Spec | 工具协议 | FastMCP 工具层 | MCP 是工具生态协议，不只是函数调用格式 |
+| Ragas / DeepEval | 输出评估 | Agent evaluation | Agent 评估要看答案、证据、工具和业务接受度 |
+| OWASP LLM Top 10 | 安全风险 | 企业数据 Agent | 工具越强，权限边界和审计越重要 |
+
+## 10. BingViz 系统设计模板
+
+### 需求定义
+
+- 输入：业务问题、市场、时间窗口、指标、对照基线。
+- 输出：根因候选、证据链、置信度、反例检查、建议动作。
+- 约束：只读数据、低延迟探索、可回放 trace、不能泄露敏感数据。
+
+### 模块拆分
+
+| 模块 | 职责 | 关键风险 | 防护 |
+| ---- | ---- | -------- | ---- |
+| Query Planner | 把问题拆成分析 DAG | 过度拆分或漏拆 | 模板化 drilldown + 动态扩展 |
+| Semantic Layer | 指标、表、dashboard 血缘 | 用错指标 | metadata validation |
+| MCP Tools | CK/Databricks/Kusto 查询 | 危险 SQL、成本过高 | readonly、limit、allowlist |
+| Context Store | 保存事实和假设 | 错误传播 | fact/hypothesis 分层、confidence |
+| Evaluator | 评估过程和答案 | 只看最终文本 | trace + answer + business rubric |
+| Observability | trace 和 debug | 出错不可定位 | tool spans、prompt version、dataset version |
+
+### 5 分钟讲法骨架
+
+1. 先定义业务问题和指标口径，避免 Agent 自己猜。
+2. 通过 semantic layer 找到相关表、字段和 dashboard 血缘。
+3. Planner 生成分析 DAG，不让模型每一步自由发散。
+4. 每个节点调用 MCP 工具，只读查询并写入 Context Object。
+5. Synthesis 节点汇总事实、假设、置信度和反例检查。
+6. Evaluator 从工具成功率、SQL 合法性、证据完整性、人工接受度打分。
+
+## 11. SkillLoop 深挖材料
+
+SkillLoop 最好不要只讲「写文档」。更强的表达是：把文档变成 Agent 的外部状态机。
+
+| 问题 | 普通 coding agent | SkillLoop |
+| ---- | ----------------- | --------- |
+| 目标漂移 | 依赖聊天历史 | `Current Goal` 每轮重锚定 |
+| 决策反复 | 模型记忆不可靠 | `Decision History` 保留原因 |
+| 依赖幻觉 | 直接假设库存在 | `Known Dependencies` 必须验证 |
+| 假装完成 | 生成代码后停止 | `Validation Results` 记录测试输出 |
+| 交接困难 | 只能看对话 | Task Log 可被人和 Agent 共同读取 |
+
+面试可用类比：
+
+> TDD 让代码通过测试，ADR 记录架构决策，PRD 记录产品意图；SkillLoop 把这些压缩成一个 Agent 可读写的执行协议，让长周期开发不依赖模型短期记忆。
+
+## 12. 高频追问答案素材
+
+- Q：为什么说 Context Propagation 不是简单 memory？
+  - A：Memory 只回答「存了什么」，Context Propagation 还规定「哪些事实必须传给哪个子任务，以及子任务必须在什么约束下执行」。它更接近 workflow state 和 constraint passing。
+- Q：如果数据源返回互相矛盾的结论怎么办？
+  - A：Context Object 里把结论标为 hypothesis，触发 cross-check 节点；例如 RPM 下降同时看 coverage、CTR、bid、query mix、market mix，不能单路径定因。
+- Q：Agent 如何处理工具失败？
+  - A：先判断是参数错误、权限错误、数据为空、超时还是 schema mismatch。参数错误可修正重试，权限错误要降级或请求人审，数据为空要把 negative evidence 写进 trace。
+- Q：为什么不用多 Agent 互相辩论？
+  - A：业务归因更需要可控工具调用和证据链。多 Agent 适合角色分工明显的任务，但会增加协调成本和评估难度；单 Agent + 图工作流 + 多工具更稳。
+- Q：SkillLoop 会不会把 CoT 暴露出来？
+  - A：Task Log 不存模型私有推理，而存工程状态：目标、计划、决策依据、依赖、验证结果。它是可审计执行记录，不是无限制暴露思维链。

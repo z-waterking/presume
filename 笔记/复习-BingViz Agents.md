@@ -9,13 +9,9 @@ related: "[[面试-BingViz Agents]], [[简历底稿]]"
 
 > 2026-04-13 复习整理
 
----
-
 ## 一句话总结
 
 > Agent 做业务分析不靠谱（ReAct 乱跑、幻觉、丢上下文）→ 做了两件事：**BingViz 用 Context Propagation 替代 ReAct 做稳健归因**，**SkillLoop 用文档驱动解决长周期开发中的上下文丢失**。
-
----
 
 ## 痛点
 
@@ -174,3 +170,123 @@ Validation Results: 单元测试通过 ✅，集成测试待做
  自动归因      Hackathon全球季军
  欧洲RPM根因   向Mustafa汇报
 ```
+
+---
+
+## 白板讲法：BingViz 归因 Agent
+
+### 1 分钟结构图
+
+```text
+User Question
+  "Why did EU RPM drop?"
+        │
+        ▼
+Problem Normalizer
+  metric / market / time window / baseline
+        │
+        ▼
+Analysis Graph Planner
+  market -> query intent -> coverage -> bid/CTR
+        │
+        ▼
+MCP Tool Layer
+  ClickHouse / Databricks / Kusto / Semantic Layer
+        │
+        ▼
+Context Object
+  facts / hypotheses / evidence / confidence
+        │
+        ▼
+Final Synthesis
+  root cause + evidence + caveats + next actions
+```
+
+讲图顺序：
+
+1. 先把用户自然语言问题标准化，避免模型自己猜指标口径。
+2. 再把归因过程变成图，而不是让 ReAct 每轮自由决定下一步。
+3. 每个节点只做一个受约束分析任务，并把结论写进 Context Object。
+4. 工具层通过 MCP 解耦数据源，所有查询都有 schema validation 和权限边界。
+5. 最终答案必须带证据、置信度和反例检查。
+
+### Context Object 示例
+
+```json
+{
+  "task": "EU RPM root-cause analysis",
+  "constraints": {
+    "market": "EU",
+    "metric": "RPM",
+    "current_window": "last_7_days",
+    "baseline_window": "previous_7_days"
+  },
+  "facts": [
+    {
+      "statement": "Germany contributed most of the RPM drop",
+      "evidence": "market_drilldown_query_01",
+      "confidence": 0.86
+    }
+  ],
+  "hypotheses": [
+    {
+      "statement": "News and weather query mix increased",
+      "next_check": "query_intent_breakdown"
+    }
+  ],
+  "blocked_actions": ["write_query", "unbounded_scan"]
+}
+```
+
+要点：facts 必须有 evidence，hypotheses 必须有 next check，危险动作必须显式禁用。
+
+## BingViz 追问答案库
+
+### Q1：为什么 ReAct 不适合这个业务归因任务？
+
+ReAct 适合短链路、工具少、目标明确的任务。业务归因是长链路问题，前一步发现会约束后一步；如果每轮都让模型重新读历史再决定行动，就会有发散、循环、遗忘和 token 膨胀。我的方案是把归因结构图化，让模型在节点内部执行，而不是让模型控制整个搜索过程。
+
+### Q2：Context Propagation 和把历史全塞进 prompt 有什么区别？
+
+全历史 prompt 是非结构化记忆，噪声多、成本高，而且模型要自己从里面找重点。Context Propagation 是结构化状态传递，只传当前节点需要继承的事实、约束、假设和证据。它减少 token，也让每一步可回放、可审计。
+
+### Q3：父节点判断错了怎么办？
+
+不能把所有输出都当 fact。Context Object 要区分 fact、hypothesis、confidence 和 evidence。低置信度结论触发 cross-check，例如 query intent、ad coverage、bid、CTR、market mix 同时验证。最终答案也要写 caveat，而不是强行定因。
+
+### Q4：MCP 带来的工程价值是什么？
+
+MCP 把工具从 Agent 代码里拆出来。新增 ClickHouse、Databricks、Kusto 工具时，不需要重写 Agent，只要部署新的 MCP server 并暴露 schema。它还天然适合做权限、限流、审计和多客户端复用。
+
+### Q5：怎么评估 Agent 是否真的有用？
+
+分四层：tool-level 看 SQL 合法性和调用成功率；step-level 看每个 drilldown 是否回答了当前问题；answer-level 看结论是否 faithful、有证据、有 caveat；business-level 看分析师是否接受、是否节省时间、是否支持决策。
+
+## SkillLoop 追问答案库
+
+### Q1：Document-Driven Development 和 TDD 有什么区别？
+
+TDD 用测试约束代码正确性，Document-Driven Development 用结构化文档约束 Agent 的目标、计划、依赖和验证。它不是替代测试，而是把测试结果、决策记录和任务状态都变成 Agent 每轮必须读取的外部状态。
+
+### Q2：Structured Task Log 为什么能降低幻觉？
+
+幻觉常来自模型忘记目标、捏造依赖、假装验证通过。Task Log 把这些点显式化：Known Dependencies 要被验证，Decision History 要说明选择原因，Validation Results 要记录真实运行结果。模型不能只凭口头记忆推进任务。
+
+### Q3：Task Log 写错了怎么办？
+
+Task Log 不是绝对真理，它要和验证结果互相校验。如果 log 写了依赖存在但安装失败，Validation Results 会暴露矛盾。关键节点还可以 human-in-the-loop 审查，必要时回滚决策。
+
+### Q4：这和普通项目管理文档有什么不同？
+
+普通文档主要给人看，更新频率低。Task Log 是执行协议，Agent 每轮都要读写，并且下一步计划受 log 约束。它是工程状态的一部分，不是旁路说明书。
+
+## 风险边界
+
+- 不要说 BingViz 是完全自主发现科学真理；更准确是受控业务归因 workflow。
+- 不要说 Context Propagation 消灭幻觉；它是降低发散和遗忘，仍需工具证据和评估。
+- 不要说 MCP 自动保证安全；安全来自只读权限、schema validation、限流、审计和 human approval。
+- 不要把 SkillLoop 夸成成熟平台；定位为 Hackathon 获奖 MVP 和方法论验证更稳。
+
+## 面试最后 20 秒收束
+
+> 我的核心经验是把 LLM Agent 从“会聊天的工具”变成“可控的工程系统”。BingViz 解决的是业务分析链路的可控推理，SkillLoop 解决的是长周期 coding agent 的状态持久化。两者共同点都是把隐式上下文外部化、结构化、可验证。
