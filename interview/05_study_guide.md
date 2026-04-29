@@ -15,6 +15,7 @@ tags: [求职, 学习]
 
 | 方向 | 对应简历项目 | 主文件 | 复习重点 |
 | ---- | ------------ | ------ | -------- |
+| 总资料包 | 全部简历经历 | [[简历资料详解包]] | 证据来源、项目细节、追问口径、3 分钟自述 |
 | 推荐系统 | 阿里推荐：PID 排序 / Borda 召回 / 全链路解耦 | [[学习-推荐系统]] | 多目标排序、召回融合、延迟反馈、无偏评估 |
 | 搜索广告 | 微软 MSM：Query-Ad 图召回 / Pareto 筛选 | [[学习-计算广告]] | 搜索广告匹配、图挖掘、拍卖机制、A/B 实验 |
 | AI Agent | BingViz Agents / SkillLoop | [[学习-AI Agent]] | ReAct 改进、MCP、Context Propagation、Agent 评估 |
@@ -196,6 +197,7 @@ tags: [求职, 学习]
 - [ ] `阿里推荐系统_1页纸.md`：PID、Borda、全链路解耦。
 - [ ] `MSM搜索广告_1页纸.md`：Query-Ad 图、Hot Ad 降噪、Pareto 筛选。
 - [ ] `BingVizAgent_1页纸.md`：LangGraph、MCP、Context Object、评估。
+- [ ] `简历资料详解包.md`：所有项目的证据、资料、口径和风险边界。
 - [ ] `高频追问_30秒答案.md`：至少 30 个短答。
 - [ ] `系统设计_白板稿.md`：推荐系统、搜索广告、Agent 平台三套。
 - [ ] `指标与实验.md`：A/B、显著性、guardrail、offline-online gap。
